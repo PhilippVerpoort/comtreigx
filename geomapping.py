@@ -1,4 +1,14 @@
+import pandas as pd
+import pycountry
+import yaml
 
+
+pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='areas, nes', numeric='')
+pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='other europe, nes', numeric='')
+pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='bunkers', numeric='')
+pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='free zones', numeric='')
+pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='special categories', numeric='')
+pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='other asia, nes', numeric='')
 
 def add_correctedcodes(data, isocode_all):
     # add new columns with corrected iso code numbers of partner and reporter
@@ -10,15 +20,7 @@ def truecode(countryDesc):
     lst = pycountry.countries.search_fuzzy(countryDesc)
     return(lst[0].numeric)
 
-import pycountry
-pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='areas, nes', numeric='')
-pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='other europe, nes', numeric='')
-pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='bunkers', numeric='')
-pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='free zones', numeric='')
-pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='special categories', numeric='')
-pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='other asia, nes', numeric='')
-
-data2 = add_correctedcodes(idata,isocode_all) #add corrected iso codes to dataframe
+#data2 = add_correctedcodes(idata,isocode_all) #add corrected iso codes to dataframe
 
 # function that return iso code to a given country name
 def isonum(country):
@@ -69,13 +71,13 @@ def data_geomap(df):
     wikidata = pd.read_csv('wikipedia-iso-country-codes.csv')
     isocode_all = list(wikidata['Numeric code']) #isocodes of all countries
 
-    import pycountry
-    pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='areas, nes', numeric='')
-    pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='other europe, nes', numeric='')
-    pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='bunkers', numeric='')
-    pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='free zones', numeric='')
-    pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='special categories', numeric='')
-    pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='other asia, nes', numeric='')
+    #import pycountry
+    #pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='areas, nes', numeric='')
+    #pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='other europe, nes', numeric='')
+    #pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='bunkers', numeric='')
+    #pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='free zones', numeric='')
+    #pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='special categories', numeric='')
+    #pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='other asia, nes', numeric='')
 
     data2 = add_correctedcodes(df,isocode_all) #add corrected iso codes to dataframe
 
