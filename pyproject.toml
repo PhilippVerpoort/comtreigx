@@ -5,7 +5,7 @@ description = ""
 authors = ["Louisa Müller <louisa.mlr96@gmail.com>"]
 readme = "README.md"
 packages = [
-    {include = "Python", from = "tidy"},
+    {include = "tidy", from = "Python"},
 ]
 
 [tool.poetry.dependencies]
