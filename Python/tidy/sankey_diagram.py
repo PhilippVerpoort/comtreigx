@@ -6,6 +6,9 @@ import plotly.graph_objects as go
 
 
 def sankey_geomapped(df):
+    #group data
+    df = df.groupby(['reporter_map', 'partner_map'])['correctedqtyinkg'].sum().reset_index()
+    
     # sankey data for geomapped data 
     source_indices = []
     target_indices = []
@@ -15,19 +18,19 @@ def sankey_geomapped(df):
 
     # Dictionary für die Summen der ausgehenden Flüsse von Reportern
     sum_rep = {}
-    for reporter in df['reporterDesc'].unique():
-        sum_rep[reporter] = si_format(df[df['reporterDesc'] == reporter]['correctedqtyinkg'].sum()/1000) #tonnen
+    for reporter in df['reporter_map'].unique():
+        sum_rep[reporter] = si_format(df[df['reporter_map'] == reporter]['correctedqtyinkg'].sum()/1000) #tonnen
 
     # Dictionary für die Summen der eingehenden Flüsse von Partnern
     sum_par = {}
-    for partner in df['partnerDesc'].unique():
-        sum_par[partner] = si_format(df[df['partnerDesc'] == partner]['correctedqtyinkg'].sum()/1000) #tonnen
+    for partner in df['partner_map'].unique():
+        sum_par[partner] = si_format(df[df['partner_map'] == partner]['correctedqtyinkg'].sum()/1000) #tonnen
 
     # Aktualisierung des DataFrames mit den Summen der ausgehenden Flüsse von Reportern
-    df['reporterDesc'] = df['reporterDesc'] + ' (' + df['reporterDesc'].map(sum_rep).astype(str) + 't )'
+    df['reporter_map'] = df['reporter_map'] + ' (' + df['reporter_map'].map(sum_rep).astype(str) + 't )'
 
     # Aktualisierung des DataFrames mit den Summen der eingehenden Flüsse von Partnern
-    df['partnerDesc'] = df['partnerDesc'] + ' (' + df['partnerDesc'].map(sum_par).astype(str) + 't )'
+    df['partner_map'] = df['partner_map'] + ' (' + df['partner_map'].map(sum_par).astype(str) + 't )'
 
 
     # colors for geomapped data 
@@ -59,7 +62,7 @@ def sankey_geomapped(df):
             pad=30,
             thickness=50,
             line=dict(color="black", width=1),
-            label=mapped['partner_map'].tolist() + mapped['reporter_map'].tolist(),
+            label=df['partner_map'].tolist() + df['reporter_map'].tolist(),
             color=colors3
         ),
         link=dict(
@@ -71,9 +74,9 @@ def sankey_geomapped(df):
         )
     )])
 
-    fig.update_layout(title_text="Sankey diagram for ammonia - mapped regions",
-                      font=dict(size=10),
-                      height = 800)
+    #fig.update_layout(title_text="Sankey diagram for ammonia - mapped regions",
+     #                 font=dict(size=10),
+      #                height = 800)
 
     fig.show()
 
@@ -154,9 +157,9 @@ def sankey_d(df,colors_target):
         )
     )])
 
-    fig.update_layout(title_text="Sankey diagram for ammonia",
-                      font=dict(size=10),
-                      height = 800)
+    #fig.update_layout(title_text="Sankey diagram for ammonia",
+     #                 font=dict(size=10),
+      #                height = 800)
     fig.update_traces(visible= True, selector=dict(type='sankey')) 
     fig.update_traces(legend= 'legend' , selector=dict(type='sankey')) 
     fig.show()

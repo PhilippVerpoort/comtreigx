@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def boundaries(df):
+    df = df[df['qtyUnitAbbr'] == 'kg'] #qty in kg
     nomissingdata = df[(df['qty'] != 0) & (df['netWgt'] != 0) & (df['primaryValue'] != 0)]
     # boundaries valueperqty
     hist, bins, _ = plt.hist(nomissingdata['valueperqty'],range=(0,2*nomissingdata['valueperqty'].median()), bins=50)
