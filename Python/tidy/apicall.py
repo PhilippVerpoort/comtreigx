@@ -5,7 +5,7 @@ def apicall(startyear,endyear, subscription_key, hscode='all'):
     if startyear == endyear:
         year = str(startyear)
     else:
-        l = list(range(2019,2022))
+        l = list(range(startyear,endyear +1))
         year = [','.join(map(str, l))]
         
     if hscode == 'all':
