@@ -28,7 +28,33 @@ Other Gases;271119,271129
 Jelly and Wax;2712
 Bitumen;2714,2715
 Electricity;2716
-Ammonia;281410,281420
+Chlorine;280110
+Hydrogen;280410
+Nitrogen;280430
+Oxygen;280440
+Silicon;280461,280469
+Phosphorus;280470
+Sodium;280511
+Calcium;280512
+Nitric and sulphonitric acids;280800
+Diphosphorus Pentaoxide;280910
+Phosphoric Acid and Polyphosphoric Acids;280920
+Carbon Dioxide;281121
+Ammonia;2814
+Zinc Oxide;281700
+Nitrates;283429
+Enriched Uranium;284420
+Ethylene;290121
+Propylene;291022
+C4 Hydrocarbons;290123,290124
+Other Acyclic Hydrocarbons;290110,290129
+Benzene;290220
+Toluene;290230
+Xylene;290241,290242,290243,290244
+Styrene;290250
+Other Cyclic Hydrocarbons;290211,290219,290260290270,290290
+Vinyl Chloride;290321
+Methanol;290511
 Urea;310210
 UAN;310280
 Ammonium Nitrate;310230
@@ -37,5 +63,22 @@ Superphosphates;310311
 Potassium Chloride;310420
 Potassium Sulphate;310430
 Other Fertilisers;310290,310390,310490,3105
-Hot Briquetted Iron;720310
-Semi-finished steel;7208,7209,7216,720711
+LDPE;390110
+HDPE;390120
+PP;390210
+PS;390311,390319
+PVC Pure;390410
+PVC Mixed;390421,390422
+PA;3908
+PUR;390950
+Other Polymers;390130,390140,390190,390220,390230,390290,390320,390330,390390390430,390440,390450,390461,390469,390490,3905,3906,3907
+Amonio and Phenolic Resins;390910,390920,390931,390939,390940
+Silicones;3910
+Waste Polymers of Ethylene;391510
+Waste Polymers of Styrene;391520
+Waste Polymers of Vinyl Chloride;391530
+Waste Polymers Other;391590
+Pig Iron;7201
+Hot Briquetted Iron;7203
+Steel Scrap;7204
+Semi-finished Steel;7207,7208,7209,7210,7211,7212,7213,7214,7215,7216,7217,7218,7219,7220,7221,7222,7223,7224,72257226,7227,7228,7229
