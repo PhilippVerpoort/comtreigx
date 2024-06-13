@@ -1,13 +1,41 @@
 flow_id;hs_codes
-LNG;271111
-Fossil Gas;271121
+Cement;2523
+Lime;2522
+Copper Ore;2603
+Nickel Ore;2604
+Aluminium Ore;2606
+Zinc Ore;2608
+Uranium Ore;261210
+Thorium Ore;261220
+Steel Slag;2618
+Coal;2701
+Lignite;2702
+Peat;2703
+Coke;2704,2713
+Other Fossil Gases;2705
+Tar;2706
+Benzene;270710
+Toluene;270720
+Xylene;270730
+Naphthalene;270740
+Pitch;2708
+Crude Oil;2709,2710 
+Fossil Gas;271111,271121
+Propane;271112
+Butane;271113
+Olefines;271114
+Other Gases;271119,271129
+Jelly and Wax;2712
+Bitumen;2714,2715
+Electricity;2716
 Ammonia;281410,281420
 Urea;310210
 UAN;310280
 Ammonium Nitrate;310230
 Calcium Ammonium Nitrate;310260
+Superphosphates;310311
+Potassium Chloride;310420
+Potassium Sulphate;310430
+Other Fertilisers;310290,310390,310490,3105
 Hot Briquetted Iron;720310
 Semi-finished steel;7208,7209,7216,720711
-Coal;2701
-Crude Oil;2709
-;2710
