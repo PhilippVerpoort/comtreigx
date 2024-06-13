@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Optional
 from warnings import warn
 from datetime import datetime
+import csv
 
 import pandas as pd
 from comtradeapicall import getTarifflineData
@@ -47,7 +48,7 @@ def api_call(period_codes: list[str], hs_codes: list[str], subscription_key: str
 
 
 def clean_arguments(period_codes: Optional[int | float | str | list[int | float | str] | tuple[int | float | str]] = None,
-                    hs_codes: Optional[int | float | str | list[int | float | str] | tuple[int | float | str]] = None,
+                    commodities: Optional[ str | list[ str] | tuple[ str]] = None,
                     ) -> (list[str], list[str]):
     # convert ints and floats to strs and convert singular values to lists
     period_codes = (
@@ -55,10 +56,16 @@ def clean_arguments(period_codes: Optional[int | float | str | list[int | float 
         [str(int(period)) for period in period_codes] if isinstance(period_codes, list | tuple) else
         [str(int(period_codes))]
     )
+    
+    with open('config/hs_codes.csv', mode='r', encoding='utf-8') as csv_file:
+        csv_reader = csv.reader(csv_file ,delimiter=';')
+        next(csv_reader, None) 
+        hs_dict = {rows[0]: rows[1] for rows in csv_reader}
+    
     hs_codes = (
-        hs_codes_map['Full HS code'].tolist() if hs_codes is None else
-        [str(int(hs_code)) for hs_code in hs_codes] if isinstance(hs_codes, list | tuple) else
-        [str(int(hs_codes))]
+       hs_codes_map['Full HS code'].tolist() if commodities is None else
+       [str(str(hs_dict[commodity])) for commodity in commodities ] if isinstance(commodities, list | tuple) else
+       [str(str(hs_dict[commodities]))]
     )
 
     # return
@@ -67,7 +74,7 @@ def clean_arguments(period_codes: Optional[int | float | str | list[int | float 
 
 def cache_data(cache_dir: Path,
                period_codes: int | float | str | list[int | float | str] | tuple[int | float | str],
-               hs_codes: Optional[int | float | str | list[int | float | str] | tuple[int | float | str]] = None,
+               commodities: Optional[ str | list[ str] | tuple[ str]] = None,
                subscription_key: Optional[str] = None,
                quiet: bool = False,
                ) -> None:
@@ -80,7 +87,7 @@ def cache_data(cache_dir: Path,
         warn('API calls should be done with a valid subscription key, but none provided. The request will likely fail.')
 
     # clean arguments
-    period_codes, hs_codes = clean_arguments(period_codes, hs_codes)
+    period_codes, hs_codes = clean_arguments(period_codes, commodities)
 
     # get data
     data = api_call(period_codes=period_codes, hs_codes=hs_codes, subscription_key=subscription_key, quiet=quiet)
@@ -89,14 +96,14 @@ def cache_data(cache_dir: Path,
     if not quiet:
         print('Saving to files ...', end='')
     for (period, hs_code), rows in data.groupby(['period', 'hsSearchCode']):
-        cache_file = cache_dir / f"hs{hs_code}_{period}.csv"
+        cache_file = cache_dir / f"{period} {commodities}.csv"
         rows.to_csv(cache_file, index=False, sep=',', quotechar='"', encoding='utf-8')
     if not quiet:
         print('Done!')
 
 
 def load_data(period_codes: int | float | str | list[int | float | str] | tuple[int | float | str],
-              hs_codes: int | float | str | list[int | float | str] | tuple[int | float | str],
+              commodities: Optional[ str | list[ str] | tuple[ str]] = None,
               cache_dir: Optional[str | Path] = None,
               subscription_key: Optional[str] = None,
               ) -> pd.DataFrame:
@@ -111,14 +118,14 @@ def load_data(period_codes: int | float | str | list[int | float | str] | tuple[
         raise Exception(f"Cache directory does not exist: {cache_dir.absolute()}")
 
     # clean arguments
-    period_codes, hs_codes = clean_arguments(period_codes, hs_codes)
+    period_codes, hs_codes = clean_arguments(period_codes, commodities)
 
     # loop over period and hs codes
     ret_list = []
     for period in period_codes:
         for hs_code in hs_codes:
             if cache_dir is not None:
-                cache_file = cache_dir / f"hs{hs_code}_{period}.csv"
+                cache_file = cache_dir / f"{period} {commodities}.csv"
                 if cache_file.exists() and cache_file.is_file():
                     cached_data = pd.read_csv(cache_file, sep=',', quotechar='"', encoding='utf-8')
                     ret_list.append(cached_data)
