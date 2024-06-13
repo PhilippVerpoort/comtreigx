@@ -1,5 +1,3 @@
-
-import pandas as pd 
 import seaborn as sns
 from si_prefix import si_format
 import plotly.graph_objects as go
@@ -79,6 +77,7 @@ def sankey_geomapped(df):
       #                height = 800)
 
     fig.show()
+
 
 def sankey_d(df,colors_target):
     # sankey data

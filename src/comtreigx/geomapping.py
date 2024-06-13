@@ -2,6 +2,7 @@ import pandas as pd
 import pycountry
 import yaml
 
+from comtreigx.paths import CONFIG_PATH
 
 pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='areas, nes', numeric='')
 pycountry.countries.add_entry(alpha_2='xx', alpha_3='xxx', name='other europe, nes', numeric='')
@@ -31,7 +32,7 @@ def isonum(country):
 
 def geomap(distribution): #function which returns a dictoinary with the regions as keys and the countries which belong to the regions as values
     #input: distribution 'R5', 'R9' or 'R10'
-    with open("common.yaml", 'r') as yaml_file: #open common.yaml file which contains the distribution of countrys into (5,9 or 10) regions
+    with open(CONFIG_PATH / 'common.yaml', 'r') as yaml_file: #open common.yaml file which contains the distribution of countrys into (5,9 or 10) regions
         yaml_content = yaml.safe_load(yaml_file)
         
     a = {
