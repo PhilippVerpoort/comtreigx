@@ -28,17 +28,12 @@ def boundaries_ammonia(df):
     return a, b, c, d, m
 
 def boundaries_10(df): 
-    #df = df[df['qtyUnitAbbr'] == 'kg']  #qty in kg
-    #nomissingdata = df[(df['qty'] != 0) & (df['netWgt'] != 0) & (df['primaryValue'] != 0)]
+
     #nomissingdata for netwgt
     nomissingdata = df[df['netWgt'] != 0]
-    #nomissingdata['valueperqty'] = nomissingdata['primaryValue']/nomissingdata['qty']
-    #nomissingdata['valuepernetwgt'] = nomissingdata['primaryValue']/nomissingdata['netWgt']
-    
-    # boundaries valueperqty
+    #nomissingdata for qty
     nomissingdata_kg = df[(df['qtyUnitAbbr'] == 'kg') & (df['qty'] != 0)]
-    #nomissingdata_kg['valueperqty'] = nomissingdata_kg['primaryValue']/nomissingdata_kg['qty']
-    #nomissingdata_kg['valuepernetwgt'] = nomissingdata_kg['primaryValue']/nomissingdata_kg['netWgt']
+    #boundaries valueperqty
     hist, bins, _ = plt.hist(nomissingdata_kg['valueperqty'], range=(0, 2 * nomissingdata_kg['valueperqty'].median()),
                             bins=150)
 
@@ -63,38 +58,32 @@ def boundaries_10(df):
     # correcting value in USD/kg
     m = (m1 + m2) / 2
     #plot
-    # Erstellen der Subplots
+
+    def add_lines_and_legend(ax, a, b, m1):
+        ax.axvline(x=a, color='g', linestyle='--', label=f'Boundaries ({round(a,2)}, {round(b,2)})')
+        ax.axvline(x=b, color='g', linestyle='--')
+        ax.axvline(x=m, color='r', linestyle='-', label=f'Correcting value\n m: {round(m,2)}')
+        ax.legend(loc='upper right')
+    
     fig, axs = plt.subplots(2, 2, figsize=(12, 10))
 
-    # Plot 1: Histogramm von nomissingdata_kg['valueperqty']
-    axs[0, 0].hist(nomissingdata_kg['valueperqty'], bins=50, edgecolor='black',range=(0, 10 * nomissingdata_kg['valueperqty'].median()))
-    axs[0, 0].set_title('Histogram of valueperqty')
-    axs[0, 0].axvline(x=a, color='g', linestyle='--', label = 'boundaries')
-    axs[0, 0].axvline(x=b, color='g', linestyle='--')   
-    axs[0, 0].axvline(x=m1, color='r', linestyle='-', label = 'correction value')
-    axs[0, 0].legend(loc='upper right')
+    # Plot 1: Histogram valueperqty
+    axs[0, 0].hist(nomissingdata_kg['valueperqty'], bins=50, edgecolor='black',range=(0, 2*b))
+    axs[0, 0].set_title('Histogram of valueperqty [USD/kg]')
+    add_lines_and_legend(axs[0, 0], a, b, m1)
 
-    # Plot 2: Histogramm von nomissingdata_kg['valueperqty'] mit Gewichtung durch nomissingdata_kg['qty']
-    axs[0, 1].hist(nomissingdata_kg['valueperqty'], bins=50, weights=nomissingdata_kg['qty'], edgecolor='black' ,range=(0, 10 * nomissingdata_kg['valueperqty'].median()))
-    axs[0, 1].set_title('Histogram of valueperqty (Weighted by qty)')
-    axs[0, 1].axvline(x=a, color='g', linestyle='--', label = 'boundaries')
-    axs[0, 1].axvline(x=b, color='g', linestyle='--')
-    axs[0, 1].axvline(x=m1, color='r', linestyle='-', label = 'correction value')
-    axs[0, 1].legend(loc='upper right')
-    # Plot 3: Histogramm von nomissingdata['valuepernetwgt']
-    axs[1, 0].hist(nomissingdata['valuepernetwgt'], bins=50, edgecolor='black' ,range=(0, 10 * nomissingdata['valuepernetwgt'].median()))
-    axs[1, 0].set_title('Histogram of valuepernetwgt')
-    axs[1, 0].axvline(x=c, color='g', linestyle='--', label = 'boundaries')
-    axs[1, 0].axvline(x=d, color='g', linestyle='--')
-    axs[1, 0].axvline(x=m2, color='r', linestyle='-', label = 'correction value')
-    axs[1, 0].legend(loc='upper right')
-    # Plot 4: Histogramm von nomissingdata['valuepernetwgt'] mit Gewichtung durch nomissingdata['netwgt']
-    axs[1, 1].hist(nomissingdata['valuepernetwgt'], bins=50, weights=nomissingdata['netWgt'], edgecolor='black' ,range=(0, 10 * nomissingdata['valuepernetwgt'].median()))
-    axs[1, 1].set_title('Histogram of valuepernetwgt (Weighted by netwgt)')
-    axs[1, 1].axvline(x=c, color='g', linestyle='--', label = 'boundaries')
-    axs[1, 1].axvline(x=d, color='g', linestyle='--')
-    axs[1, 1].axvline(x=m2, color='r', linestyle='-', label = 'correction value')
-    axs[1, 1].legend(loc='upper right')
+    # Plot 2 Histogram of valueperqty (Weighted by qty)
+    axs[0, 1].hist(nomissingdata_kg['valueperqty'], bins=50, weights=nomissingdata_kg['qty'], edgecolor='black' ,range=(0, 2*b))
+    axs[0, 1].set_title('Histogram of valueperqty (Weighted by qty) [USD/kg]')
+    add_lines_and_legend(axs[0, 1], a, b, m1)
+    # Plot 3: Histogram of valuepernetwgt [USD/kg]
+    axs[1, 0].hist(nomissingdata['valuepernetwgt'], bins=50, edgecolor='black' ,range=(0, 2*d))
+    axs[1, 0].set_title('Histogram of valuepernetwgt [USD/kg]')
+    add_lines_and_legend(axs[1, 0], c, d, m2)
+    # Plot 4: Histogram of valuepernetwgt (Weighted by netwgt)
+    axs[1, 1].hist(nomissingdata['valuepernetwgt'], bins=50, weights=nomissingdata['netWgt'], edgecolor='black' ,range=(0, 2*d))
+    axs[1, 1].set_title('Histogram of valuepernetwgt (Weighted by netwgt) [USD/kg]')
+    add_lines_and_legend(axs[1, 1], c, d, m2)
     # Layout-Anpassungen
     plt.tight_layout()
 
@@ -147,10 +136,58 @@ def before_correcting(df):
 
 def qty_correcting(row ,a ,b, c, d, m):
     if (row['qtyUnitAbbr'] == 'kg') and (a <= row['valueperqty'] <= b):
-        return(row['qty'])
+        diff = 0
+        w = row['qty'] #weight
+        return(row['qty'],diff,w)
     elif (row['netWgt'] != 0) and (c <= row['valuepernetwgt'] <= d ):
-        return(row['netWgt'])
+        diff = 0
+        w = row['netWgt']
+        return(row['netWgt'],diff,w)
     else:
-        return(row['primaryValue']/m)
+        if (row['qtyUnitAbbr'] == 'kg') and (row['qty'] != 0):
+            w = row['qty'] #weight
+            diff = 100*(row['qty']-(row['primaryValue']/m))/(row['primaryValue']/m)
+        elif row['netWgt'] != 0:
+            w = row['netWgt'] #weight
+            diff = 100*(row['netWgt']-(row['primaryValue']/m))/(row['primaryValue']/m)
+        else:
+            diff = -1 #(0-row['primaryValue']/m)/(row['primaryValue']/m)
+            w = row['primaryValue']/m
+        return(row['primaryValue']/m, diff, w)
     
+def differences(df):
+    import numpy as np
+    d = df[df['diff'] != 0]
+    mini = d['diff'].min()
+    
+    if np.isneginf(mini):
+        mini = 1/10*df['diff'].median()-2*abs(df['diff'].median())
+        l = mini - 10*abs(df['diff'].median())
+    else:
+        l = d['diff'].min()
+    if np.isposinf(d['diff'].max()):
+        u = 10*df['diff'].median()+10*abs(df['diff'].median())
+    else:
+        u = d['diff'].max()
+    maxi = -mini  
+    print(l,u,d['diff'].median())
+    fig, axs = plt.subplots(2, 2, figsize=(12, 10))
 
+    # Plot 
+    axs[0,0].hist(d['diff'], bins=50, edgecolor='black',range=(l,u))
+    axs[0,0].set_title('Difference between qty and corrected qty [%]')
+    axs[0,1].hist(d['diff'], bins=50, weights= d['w'], edgecolor='black' ,range=(l,u))
+    axs[0,1].set_title('Difference between qty and corrected qty [%] (Weighted by qty)')
+    axs[1,0].hist(d['diff'], bins=150, edgecolor='black',range=(mini,maxi))
+    axs[1,0].set_title('Difference between qty and corrected qty [%]')
+    axs[1,1].hist(d['diff'], bins=150, weights= d['w'], edgecolor='black',range=(mini,maxi) )
+    axs[1,1].set_title('Difference between qty and corrected qty [%] (Weighted by qty)')
+
+
+def correction_and_results(comm,year,subscription_key,directory):
+    from get_data import load_data
+    idata = load_data(year,comm,directory,subscription_key)
+    df = before_correcting(idata) 
+    a,b,c,d,m = boundaries_10(df) 
+    df[['correctedqtyinkg', 'diff','w']] = df.apply(qty_correcting, args=(a, b, c, d, m), axis=1, result_type='expand')
+    differences(df)
