@@ -19,7 +19,7 @@ def main():
     parser_conv = subparsers.add_parser('cache')
     parser_conv.add_argument('-q', '--quiet', action="store_true", default=False, help='Silence output when caching data.')
     parser_conv.add_argument('-p', '--periods', type=lambda s: s.split(','), default=None, help='List of periods to obtain.')
-    parser_conv.add_argument('-c', '--commodities', default=None, help='List of HS codes to obtain.')
+    parser_conv.add_argument('-c', '--commodities', default=None, help='List of commodities to obtain.')
     parser_conv.add_argument('subscrkey', type=str, help='Subscription key for Comtrade API.')
     parser_conv.add_argument('cachedir', type=Path, help='Directory where files will be cached.')
 
