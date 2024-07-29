@@ -20,6 +20,7 @@ def main():
     parser_conv.add_argument('-q', '--quiet', action="store_true", default=False, help='Silence output when caching data.')
     parser_conv.add_argument('-p', '--periods', type=lambda s: s.split(','), default=None, help='List of periods to obtain.')
     parser_conv.add_argument('-c', '--commodities', default=None, help='List of commodities to obtain.')
+    parser_conv.add_argument('-f', '--freq', default='A', help='Temporal frequency of data (A for annual or M for monthly).')
     parser_conv.add_argument('subscrkey', type=str, help='Subscription key for Comtrade API.')
     parser_conv.add_argument('cachedir', type=Path, help='Directory where files will be cached.')
 
@@ -38,6 +39,7 @@ def main():
                 commodities=args.commodities,
                 subscription_key=args.subscrkey,
                 quiet=args.quiet,
+                freq=args.freq,
             )
         case _:
             print(f"Unknown command: {cmd}")

@@ -11,17 +11,21 @@ from comtreigx.hs_codes import hs_codes_map
 
 
 def api_call(commodity: str, period_codes: list[str], hs_codes: list[str],
-             subscription_key: str, quiet: bool) -> pd.DataFrame:
+             subscription_key: str, quiet: bool, freq: str) -> pd.DataFrame:
     # batch_size = 20
     # loop over period and hs codes
     ret_list = []
-    periods = ','.join(period_codes)
+    periods = ','.join(
+        [f"{period}{month+1:02d}" for period in period_codes for month in range(12)]
+        if freq == 'M' else
+        period_codes
+    )
     for hs_code in hs_codes:
         if not quiet:
             print(f"Getting HS Code {hs_code} for periods {periods} ... ", end='')
         flow_codes = 'M,FM,MIP,RM,MOP'
         df = getTarifflineData(
-            subscription_key, typeCode='C', freqCode='A', clCode='HS', period=periods, reporterCode='',
+            subscription_key, typeCode='C', freqCode=freq, clCode='HS', period=periods, reporterCode='',
             cmdCode=hs_code, flowCode=flow_codes, partnerCode='', partner2Code=None, customsCode=None,
             motCode=None, maxRecords=250000, format_output='JSON', countOnly=None, includeDesc=True,
         )
@@ -62,6 +66,7 @@ def cache_data(cache_dir: Path,
                period_codes: int | float | str | list[int | float | str] | tuple[int | float | str],
                commodities: Optional[str | list[str] | tuple[str]] = None,
                subscription_key: Optional[str] = None,
+               freq: str = 'A',
                quiet: bool = False,
                ) -> None:
     # check that the output directory exists and is a directory
@@ -84,13 +89,14 @@ def cache_data(cache_dir: Path,
             hs_codes=hs_codes,
             subscription_key=subscription_key,
             quiet=quiet,
+            freq=freq,
         )
 
         # loop over grouped data
         if not quiet:
             print('Saving to files ...', end='')
         for period, rows in loaded_data.groupby('period'):
-            cache_file = cache_dir / f"{commodity}_{period}.csv"
+            cache_file = cache_dir / f"{commodity}_{period}{freq}.csv"
             rows.to_csv(cache_file, index=False, sep=',', quotechar='"', encoding='utf-8')
         if not quiet:
             print('Done!')
@@ -100,6 +106,7 @@ def load_data(period_codes: int | float | str | list[int | float | str] | tuple[
               commodities: Optional[str | list[str] | tuple[str]] = None,
               cache_dir: Optional[str | Path] = None,
               subscription_key: Optional[str] = None,
+              freq: str = 'A',
               ) -> pd.DataFrame:
     # check that either cache directory or subscription key are provided
     if not cache_dir and not subscription_key:
@@ -119,7 +126,7 @@ def load_data(period_codes: int | float | str | list[int | float | str] | tuple[
     for period in period_codes:
         for commodity in commodities:
             if cache_dir is not None:
-                cache_file = cache_dir / f"{commodity}_{period}.csv"
+                cache_file = cache_dir / f"{commodity}_{period}{freq}.csv"
                 if cache_file.exists() and cache_file.is_file():
                     cached_data = pd.read_csv(cache_file, sep=',', quotechar='"', encoding='utf-8')
                     ret_list.append(cached_data)
@@ -131,6 +138,7 @@ def load_data(period_codes: int | float | str | list[int | float | str] | tuple[
                     hs_codes=hs_codes,
                     subscription_key=subscription_key,
                     quiet=True,
+                    freq=freq,
                 )
                 ret_list.append(loaded_data)
 
