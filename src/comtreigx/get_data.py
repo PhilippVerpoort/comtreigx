@@ -23,7 +23,7 @@ def api_call(commodity: str, period_codes: list[str], hs_codes: list[str],
     for hs_code in hs_codes:
         if not quiet:
             print(f"Getting HS Code {hs_code} for periods {periods} ... ", end='')
-        flow_codes = 'M,FM,MIP,RM,MOP'
+        flow_codes = 'M,MIP,MOP'
         df = getTarifflineData(
             subscription_key, typeCode='C', freqCode=freq, clCode='HS', period=periods, reporterCode='',
             cmdCode=hs_code, flowCode=flow_codes, partnerCode='', partner2Code=None, customsCode=None,
